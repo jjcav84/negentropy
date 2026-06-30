@@ -197,39 +197,40 @@ quantities onto the same formula:
 energy = confidence × √(depth_ratio × timing_factor) × latency_decay × (1 − cost_penalty)
 ```
 
-| Project | Confidence | Depth | Timing | Latency | Cost | Vendored module |
-|---------|-----------|-------|--------|---------|------|-----------------|
+| Project | Confidence | Depth | Timing | Latency | Cost | Adapter module |
+|---------|-----------|-------|--------|---------|------|----------------|
 | **orkid** | pool TVL / net bps | liquidity depth | hop recency | stage latency | gas | `fmd-physics/src/route_energy.rs` (origin) |
 | **zk-age** | issuer trust | credential strength | attestation age | proof gen+verify | zkVerify fee | `backend/src/attestation_energy.rs` |
 | **zk-attest** | attestation weight | credential depth | attestation recency | HCS+proof latency | HBAR cost | `backend/src/attestation_energy.rs` |
 | **zk-ballot** | merkle tree depth | anonymity set | vote recency | Halo2 proof time | gas | `src/ballot_energy.rs` |
 
-### Current state: vendored → shared library
+### Current state: shared library
 
-Today each zk-* sibling **vendors** its own copy of the FMD energy formula
-(`attestation_energy.rs` / `ballot_energy.rs`), each citing orkid as the
-origin. `negentropy` was extracted to be the single source of truth — the
-goal is for each sibling to drop its vendored module and depend on
-`negentropy` directly:
+All three zk-* siblings now depend on `negentropy` directly — the vendored
+FMD physics modules have been replaced with thin domain adapters that
+delegate the core formula to this crate:
 
 ```toml
-# In a sibling's Cargo.toml (roadmap)
+# In a sibling's Cargo.toml
 [dependencies]
 negentropy = { git = "https://github.com/jjcav84/negentropy.git" }
 ```
 
 ```rust
-// Before (vendored, ~250 lines per repo):
-use crate::attestation_energy::ProofPotential;
+// Each sibling's energy module is now a thin adapter:
+use negentropy::{Committor, Negentropy, RouteEnergy};
 
-// After (shared library):
-use negentropy::RoutePotential;
+// Domain-specific mapping → core physics delegation
+let energy = RouteEnergy::new(confidence, depth_ratio, timing, latency, cost).energy;
+let committor = Committor::score(depth_ratio, timing, cost);
+let negentropy_bits = Negentropy::from_constraints(constraints, threshold).bits();
 ```
 
-Until that migration is complete, the vendored modules and `negentropy`
-implement the same formula and produce the same scores. The sibling repos
-remain the authoritative application code; `negentropy` is the canonical
-physics.
+Each adapter keeps only its domain mapping (issuer trust → confidence,
+attestation type → base depth, tree depth → anonymity set) — roughly 60%
+less code per repo, with the physics maintained in one place. The sibling
+repos remain the authoritative application code; `negentropy` is the
+canonical physics.
 
 ### Origin
 
