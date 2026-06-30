@@ -1,0 +1,18 @@
+[package]
+name = "negentropy-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "CLI for the negentropy physics engine — score any system's thermodynamic energy"
+
+[[bin]]
+name = "negentropy"
+path = "src/main.rs"
+
+[dependencies]
+negentropy = { path = ".." }
+serde = { workspace = true }
+serde_json = { workspace = true }
+clap = { version = "4", features = ["derive"] }

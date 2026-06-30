@@ -1,0 +1,30 @@
+[workspace]
+members = ["cli"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Jacob Cavazos <jjcav84@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/jjcav84/negentropy"
+description = "The physics of information extraction — open-source thermodynamic engine for scoring any system where information reduces entropy"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[package]
+name = "negentropy"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "The physics of information extraction — open-source thermodynamic engine for scoring any system where information reduces entropy"
+keywords = ["negentropy", "information-theory", "thermodynamics", "statistical-mechanics", "physics"]
+categories = ["science", "mathematics", "cryptography::cryptocurrencies"]
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }

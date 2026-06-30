@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>negentropy — The Physics of Information Extraction</title>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #13131a;
+  --border: #2a2a3a;
+  --text: #e0e0e8;
+  --muted: #8888a0;
+  --fire: #ff6b35;
+  --ember: #f7931e;
+  --ash: #4a4a5a;
+  --phoenix: #a78bfa;
+  --gold: #fbbf24;
+  --mono: 'SF Mono', 'Fira Code', monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+}
+.container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+h1 .fire { color: var(--fire); }
+h1 .phoenix { color: var(--phoenix); }
+.tagline { color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; font-style: italic; }
+
+.cycle {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255,107,53,0.05), rgba(167,139,250,0.05));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.phase {
+  text-align: center;
+  padding: 1rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.phase-1 { background: rgba(74,74,90,0.2); border-color: var(--ash); }
+.phase-2 { background: rgba(255,107,53,0.1); border-color: var(--fire); }
+.phase-3 { background: rgba(247,147,30,0.1); border-color: var(--ember); }
+.phase-4 { background: rgba(167,139,250,0.1); border-color: var(--phoenix); }
+.phase-num { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.phase-name { font-size: 1.1rem; font-weight: 700; margin: 0.25rem 0; }
+.phase-1 .phase-name { color: var(--ash); }
+.phase-2 .phase-name { color: var(--fire); }
+.phase-3 .phase-name { color: var(--ember); }
+.phase-4 .phase-name { color: var(--phoenix); }
+.phase-formula { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+.arrow { color: var(--muted); font-size: 1.5rem; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.card h2 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--phoenix); }
+label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.25rem; margin-top: 0.75rem; }
+input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: var(--mono);
+}
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+button {
+  background: var(--phoenix);
+  color: var(--bg);
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+}
+button:hover { opacity: 0.85; }
+.result {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  display: none;
+}
+.big-number { font-size: 2.5rem; font-weight: 700; font-family: var(--mono); }
+.big-label { font-size: 0.8rem; color: var(--muted); }
+.metric-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); }
+.metric-row:last-child { border-bottom: none; }
+.metric-label { color: var(--muted); }
+.metric-value { font-family: var(--mono); font-weight: 600; }
+.apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+.app {
+  padding: 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: center;
+}
+.app-name { font-weight: 600; font-size: 0.9rem; }
+.app-desc { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+.app a { color: var(--phoenix); text-decoration: none; }
+.quote {
+  font-style: italic;
+  color: var(--muted);
+  padding: 1rem 1.5rem;
+  border-left: 3px solid var(--fire);
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1><span class="fire">neg</span><span class="phoenix">entropy</span></h1>
+  <p class="tagline">The physics of information extraction — open-source thermodynamic engine for the Phoenix cycle.</p>
+
+  <div class="quote">
+    A Phoenix doesn't just survive; it uses intense thermal energy to burn away its outdated form,
+    collapsing its entire state into ash so it can reconstitute itself into something pure, ordered, and renewed.
+  </div>
+
+  <div class="cycle">
+    <div class="phase phase-1">
+      <div class="phase-num">Phase 1</div>
+      <div class="phase-name">ENTROPY</div>
+      <div class="phase-formula">H = -Σ pᵢ log₂(pᵢ)</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="phase phase-2">
+      <div class="phase-num">Phase 2</div>
+      <div class="phase-name">BURN</div>
+      <div class="phase-formula">E ≥ k_B T ln(2)</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="phase phase-3">
+      <div class="phase-num">Phase 3</div>
+      <div class="phase-name">EXTRACTION</div>
+      <div class="phase-formula">N = D_KL(p‖q)</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="phase phase-4">
+      <div class="phase-num">Phase 4</div>
+      <div class="phase-name">REBIRTH</div>
+      <div class="phase-formula">q(x) = hits/total</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Score a System</h2>
+    <div class="row">
+      <div>
+        <label>Constraints (N)</label>
+        <input id="constraints" type="number" value="17">
+      </div>
+      <div>
+        <label>Threshold (T)</label>
+        <input id="threshold" type="number" value="18">
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Confidence (0-100)</label>
+        <input id="confidence" type="number" value="95">
+      </div>
+      <div>
+        <label>Latency (ms)</label>
+        <input id="latency" type="number" value="572">
+      </div>
+    </div>
+    <button onclick="score()">Compute Phoenix Score</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <div class="card">
+    <h2>Applications Powered by negentropy</h2>
+    <div class="apps">
+      <div class="app">
+        <div class="app-name"><a href="https://github.com/jjcav84/zk-age">zk-age</a></div>
+        <div class="app-desc">Privacy-preserving age verification</div>
+      </div>
+      <div class="app">
+        <div class="app-name"><a href="https://github.com/jjcav84/zk-attest">zk-attest</a></div>
+        <div class="app-desc">ZK attestations on Hedera</div>
+      </div>
+      <div class="app">
+        <div class="app-name"><a href="https://github.com/jjcav84/zk-ballot">zk-ballot</a></div>
+        <div class="app-desc">Anonymous on-chain voting</div>
+      </div>
+      <div class="app">
+        <div class="app-name"><a href="https://github.com/jjcav84/orkid">orkid</a></div>
+        <div class="app-desc">FMD physics MEV engine (origin)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>References</h2>
+    <div class="metric-row"><span class="metric-label">Boltzmann (1877)</span><span class="metric-value">S = k_B ln Ω</span></div>
+    <div class="metric-row"><span class="metric-label">Shannon (1948)</span><span class="metric-value">I = H_before − H_after</span></div>
+    <div class="metric-row"><span class="metric-label">Landauer (1961)</span><span class="metric-value">E ≥ k_B T ln 2</span></div>
+    <div class="metric-row"><span class="metric-label">Brillouin (1953)</span><span class="metric-value">Negentropy = Information</span></div>
+    <div class="metric-row"><span class="metric-label">Kullback-Leibler (1951)</span><span class="metric-value">D_KL(p‖q) = Σ p log(p/q)</span></div>
+    <div class="metric-row"><span class="metric-label">Bolhuis et al. (2002)</span><span class="metric-value">Transition Path Sampling</span></div>
+  </div>
+</div>
+
+<script>
+function score() {
+  const N = parseInt(document.getElementById('constraints').value);
+  const T = parseInt(document.getElementById('threshold').value);
+  const conf = parseFloat(document.getElementById('confidence').value);
+  const latency = parseInt(document.getElementById('latency').value);
+
+  // Phase 1: Entropy
+  const H_max = Math.log2(T);
+  // Phase 2: Burn (Landauer at 300K)
+  const k_B = 1.380649e-23;
+  const burn_j = k_B * 300 * Math.LN2 * N * Math.log2(T);
+  // Phase 3: Extraction
+  const negentropy = N * Math.log2(T);
+  const depth_ratio = conf * Math.log10(T) / Math.log10(10);
+  const latency_decay = 1.0 / (1.0 + latency * 0.0001);
+  const cost_penalty = 0.00001;
+  const energy = conf * Math.sqrt(depth_ratio * 1.0) * latency_decay * (1 - cost_penalty);
+  // Phase 4: Rebirth (committor)
+  const committor = (depth_ratio / (1 + depth_ratio)) * 1.0 * (1 - cost_penalty * 0.5);
+
+  const el = document.getElementById('result');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="text-align:center; margin-bottom:1rem;">
+      <div class="big-number" style="color: var(--phoenix);">${energy.toFixed(2)}</div>
+      <div class="big-label">PHOENIX ENERGY SCORE</div>
+    </div>
+    <div class="metric-row"><span class="metric-label">Phase 1: Max entropy</span><span class="metric-value">${H_max.toFixed(2)} bits</span></div>
+    <div class="metric-row"><span class="metric-label">Phase 2: Landauer burn</span><span class="metric-value">${burn_j.toExponential(3)} J</span></div>
+    <div class="metric-row"><span class="metric-label">Phase 3: Negentropy extracted</span><span class="metric-value">${negentropy.toFixed(1)} bits</span></div>
+    <div class="metric-row"><span class="metric-label">Phase 3: Depth ratio</span><span class="metric-value">${depth_ratio.toFixed(2)}</span></div>
+    <div class="metric-row"><span class="metric-label">Phase 3: Latency decay</span><span class="metric-value">${latency_decay.toFixed(4)}</span></div>
+    <div class="metric-row"><span class="metric-label">Phase 4: Committor P(valid)</span><span class="metric-value">${(committor * 100).toFixed(1)}%</span></div>
+    <div style="margin-top:0.75rem; color: var(--muted); font-size: 0.75rem;">
+      Formula: energy = confidence × √(depth × timing) × latency_decay × (1 − cost)<br>
+      Origin: orkid fmd-physics/src/route_energy.rs
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
