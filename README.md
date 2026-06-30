@@ -181,6 +181,7 @@ family of ZK and DeFi projects. It lives in a sibling workspace alongside them:
 web3-defi/
 ├── negentropy/     ← this repo — the generalized thermodynamic engine
 ├── orkid/          ← origin: FMD physics engine for MEV detection
+├── zenkinetic/     ← thermodynamic privacy gate for Horizen Base L3
 ├── zk-age/         ← privacy-preserving age verification
 ├── zk-attest/      ← zero-knowledge attestations on Hedera
 └── zk-ballot/      ← anonymous on-chain voting with Halo2
@@ -200,6 +201,7 @@ energy = confidence × √(depth_ratio × timing_factor) × latency_decay × (1 
 | Project | Confidence | Depth | Timing | Latency | Cost | Adapter module |
 |---------|-----------|-------|--------|---------|------|----------------|
 | **orkid** | pool TVL / net bps | liquidity depth | hop recency | stage latency | gas | `fmd-physics/src/route_energy.rs` (origin) |
+| **zenkinetic** | tx kind weight | anonymity set | proof age | proof gen+verify | ZEN stake discount | `src/gate.rs` |
 | **zk-age** | issuer trust | credential strength | attestation age | proof gen+verify | zkVerify fee | `backend/src/attestation_energy.rs` |
 | **zk-attest** | attestation weight | credential depth | attestation recency | HCS+proof latency | HBAR cost | `backend/src/attestation_energy.rs` |
 | **zk-ballot** | merkle tree depth | anonymity set | vote recency | Halo2 proof time | gas | `src/ballot_energy.rs` |
