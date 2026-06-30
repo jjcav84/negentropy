@@ -3,6 +3,8 @@
 > *A Phoenix doesn't just survive; it uses intense thermal energy to burn
 > away its outdated form, collapsing its entire state into ash so it can
 > reconstitute itself into something pure, ordered, and renewed.*
+>
+> **By [Orkid Labs](https://www.orkidlabs.com)** — privacy-first crypto engineering
 
 An open-source thermodynamic engine for scoring any system where
 information reduces entropy. Extracted and generalized from the
@@ -267,6 +269,12 @@ formal negentropy model and complex microstructure scoring.
 - orkid blog — ["Complex Microstructure and Route Scoring"](https://github.com/jjcav84/orkid/blob/main/blog/2025-10-18-complex-microstructure-route-scoring.md)
 
 ---
+
+## About
+
+Built by [Orkid Labs](https://www.orkidlabs.com) — a privacy-first crypto
+engineering lab building thermodynamic infrastructure for decentralized
+systems. See our other work at [orkidlabs.com](https://www.orkidlabs.com).
 
 ## License
 
