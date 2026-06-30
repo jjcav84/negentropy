@@ -179,12 +179,15 @@ family of ZK and DeFi projects. It lives in a sibling workspace alongside them:
 
 ```text
 web3-defi/
-├── negentropy/     ← this repo — the generalized thermodynamic engine
-├── orkid/          ← origin: FMD physics engine for MEV detection
-├── zenkinetic/     ← thermodynamic privacy gate for Horizen Base L3
-├── zk-age/         ← privacy-preserving age verification
-├── zk-attest/      ← zero-knowledge attestations on Hedera
-└── zk-ballot/      ← anonymous on-chain voting with Halo2
+├── negentropy/         ← this repo — the generalized thermodynamic engine
+├── orkid/              ← origin: FMD physics engine for MEV detection
+├── zenkinetic/         ← thermodynamic privacy gate for Horizen Base L3
+├── horizen-age/        ← privacy-preserving age verification on Horizen
+├── horizen-attest/     ← ZK attestations on Horizen
+├── horizen-ballot/     ← anonymous on-chain voting on Horizen
+├── zk-age/             ← privacy-preserving age verification (original)
+├── zk-attest/          ← zero-knowledge attestations on Hedera (original)
+└── zk-ballot/          ← anonymous on-chain voting with Halo2 (original)
 ```
 
 ### How they connect
@@ -202,6 +205,9 @@ energy = confidence × √(depth_ratio × timing_factor) × latency_decay × (1 
 |---------|-----------|-------|--------|---------|------|----------------|
 | **orkid** | pool TVL / net bps | liquidity depth | hop recency | stage latency | gas | `fmd-physics/src/route_energy.rs` (origin) |
 | **zenkinetic** | tx kind weight | anonymity set | proof age | proof gen+verify | ZEN stake discount | `src/gate.rs` |
+| **horizen-age** | issuer trust | constraint count | proof age | proof gen+verify | ZEN stake (Pro) | `src/session.rs` |
+| **horizen-attest** | attestation kind | constraint count | attestation age | proof gen+verify | ZEN stake (Basic) | `src/session.rs` |
+| **horizen-ballot** | registry trust | tree depth | vote age | Halo2 proof time | ZEN stake (Pro) | `src/session.rs` |
 | **zk-age** | issuer trust | credential strength | attestation age | proof gen+verify | zkVerify fee | `backend/src/attestation_energy.rs` |
 | **zk-attest** | attestation weight | credential depth | attestation recency | HCS+proof latency | HBAR cost | `backend/src/attestation_energy.rs` |
 | **zk-ballot** | merkle tree depth | anonymity set | vote recency | Halo2 proof time | gas | `src/ballot_energy.rs` |
@@ -233,6 +239,10 @@ attestation type → base depth, tree depth → anonymity set) — roughly 60%
 less code per repo, with the physics maintained in one place. The sibling
 repos remain the authoritative application code; `negentropy` is the
 canonical physics.
+
+The `horizen-*` repos are Horizen-native adaptations of the `zk-*` repos —
+they add ZEN token staking and ZenKinetic privacy gate integration on top
+of the same negentropy scoring, deploying on Horizen Base L3.
 
 ### Origin
 
