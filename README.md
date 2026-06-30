@@ -1,3 +1,7 @@
+<p align="center">
+  <a href="https://www.orkidlabs.com"><img src="assets/logo.png" alt="Orkid Labs" width="220" /></a>
+</p>
+
 # negentropy — The Physics of Information Extraction
 
 > *A Phoenix doesn't just survive; it uses intense thermal energy to burn
